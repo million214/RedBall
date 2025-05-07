@@ -5,65 +5,101 @@ import javax.swing.*;
 
 public class AuthorInfo extends JFrame {
     public AuthorInfo() {
+        // Cài đặt giao diện cửa sổ thông tin tác giả
         setTitle("Thông tin nhà phát triển");
-        setSize(400, 600);
+        setSize(500, 700);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-        setLayout(new BorderLayout());
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20)); // Khoảng cách viền ngoài
+        // Tạo BackgroundPanel để vẽ nền
+        BackgroundPanel backgroundPanel = new BackgroundPanel();
+        backgroundPanel.setLayout(new BoxLayout(backgroundPanel, BoxLayout.Y_AXIS));
+        backgroundPanel.setBorder(BorderFactory.createEmptyBorder(70, 140, 50, 140)); 
+        // Tạo khoảng trống: top, left, bottom, right
 
-        // Thêm ảnh tác giả, phóng to ảnh và căn giữa
+        // Ảnh tác giả
         ImageIcon authorImage = new ImageIcon(getClass().getResource("/images/author.jpg"));
-        Image scaledImage = authorImage.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+        Image scaledImage = authorImage.getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH);
         JLabel imageLabel = new JLabel(new ImageIcon(scaledImage));
+        imageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Thông tin tác giả (tên, email, GitHub gần với ảnh)
-        JLabel nameLabel = new JLabel("Tác giả: Bùi Văn Triệu", SwingConstants.CENTER);
-        JLabel emailLabel = new JLabel("Email: unlcp001@gmail.com", SwingConstants.CENTER);
-        JLabel githubLabel = new JLabel("GitHub: github.com/million214", SwingConstants.CENTER);
+        // Thông tin tác giả
+        JLabel nameLabel = new JLabel("Tác giả: Bùi Văn Triệu");
+        JLabel emailLabel = new JLabel("Email: unlcp001@gmail.com");
+        JLabel githubLabel = new JLabel("GitHub: github.com/million214");
 
-        // Định dạng font chữ
-        nameLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        Font textFont = new Font("Arial", Font.BOLD, 18);
+        nameLabel.setFont(textFont);
         emailLabel.setFont(new Font("Arial", Font.PLAIN, 16));
         githubLabel.setFont(new Font("Arial", Font.PLAIN, 16));
 
-        // Căn chỉnh các thành phần
-        imageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        // Màu sắc văn bản
+        nameLabel.setForeground(Color.WHITE);
+        emailLabel.setForeground(Color.WHITE);
+        githubLabel.setForeground(Color.WHITE);
+
+        // Căn giữa các nhãn
         nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         emailLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         githubLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Gộp ảnh + thông tin vào panel chung để giữ bố cục gọn gàng
-        JPanel infoPanel = new JPanel();
-        infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
-        infoPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        infoPanel.add(imageLabel);
-        infoPanel.add(Box.createVerticalStrut(10)); // Khoảng cách giữa ảnh và tên
-        infoPanel.add(nameLabel);
-        infoPanel.add(Box.createVerticalStrut(5)); // Khoảng cách giữa tên và email
-        infoPanel.add(emailLabel);
-        infoPanel.add(Box.createVerticalStrut(5)); // Khoảng cách giữa email và GitHub
-        infoPanel.add(githubLabel);
+        // Tạo nút quay lại
+        JButton backButton = new JButton();
+        backButton.setPreferredSize(new Dimension(120, 50));
+        backButton.setMaximumSize(new Dimension(120, 50));
+        backButton.setAlignmentX(Component.CENTER_ALIGNMENT); // Căn giữa
 
-        // Nút quay lại
-        JButton backButton = new JButton("Quay lại");
-        backButton.setFont(new Font("Arial", Font.BOLD, 14));
-        backButton.setPreferredSize(new Dimension(140, 40));
-        backButton.setMaximumSize(new Dimension(140, 40)); // Giữ kích thước cố định
-        backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        try {
+            ImageIcon exitIcon = new ImageIcon(getClass().getResource("/images/exit.jpg"));
+            Image scaledExitImage = exitIcon.getImage().getScaledInstance(120, 50, Image.SCALE_SMOOTH);
+            backButton.setIcon(new ImageIcon(scaledExitImage));
+            backButton.setBorderPainted(false);
+            backButton.setContentAreaFilled(false);
+        } catch (Exception e) {
+            System.out.println("Không thể tải ảnh exit.jpg");
+        }
+
+        // Sự kiện khi nhấn nút quay lại
         backButton.addActionListener(e -> dispose());
 
-        // Thêm các thành phần vào panel chính
-        panel.add(infoPanel);
-        panel.add(Box.createVerticalStrut(20)); // Khoảng cách trước nút bấm
-        panel.add(backButton);
+        // Sắp xếp nội dung trên giao diện
+        backgroundPanel.add(Box.createVerticalStrut(90)); // Khoảng trống phía trên
+        backgroundPanel.add(imageLabel);
+        backgroundPanel.add(Box.createVerticalStrut(40)); // Khoảng trống giữa ảnh và tên
+        backgroundPanel.add(nameLabel);
+        backgroundPanel.add(Box.createVerticalStrut(10)); // Khoảng trống giữa các nhãn
+        backgroundPanel.add(emailLabel);
+        backgroundPanel.add(Box.createVerticalStrut(10)); // Khoảng trống giữa các nhãn
+        backgroundPanel.add(githubLabel);
+        backgroundPanel.add(Box.createVerticalGlue()); // Đẩy nút xuống đáy
+        backgroundPanel.add(backButton);
 
-        add(panel, BorderLayout.CENTER);
+        setContentPane(backgroundPanel);
     }
 
+    // Lớp BackgroundPanel để vẽ nền cho cửa sổ
+    class BackgroundPanel extends JPanel {
+        private Image backgroundImage;
+
+        public BackgroundPanel() {
+            try {
+                // Tải ảnh nền
+                backgroundImage = new ImageIcon(getClass().getResource("/images/TacGia.png")).getImage();
+            } catch (Exception e) {
+                System.out.println("Không thể tải ảnh nền TacGia.png");
+            }
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            if (backgroundImage != null) {
+                g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+            }
+        }
+    }
+
+    // Phương thức main để chạy ứng dụng
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new AuthorInfo().setVisible(true));
     }
